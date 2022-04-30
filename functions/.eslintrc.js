@@ -1,17 +1,22 @@
 module.exports = {
-    env: {
-      browser: true,
-      es6: true,
-      node: true,
-    },
-    ignorePatterns: ['.eslintrc.js'],
-    extends: [
-      "plugin:import/errors",
-      "plugin:import/warnings",
-    ],
+  root: true,
+  env: {
+    es6: true,
+    node: true,
+  },
+  ignorePatterns: [".eslintrc.js",     "/lib/**/*", // Ignore built files.
+],
+  extends: [ 
+    "eslint:recommended",
+    "plugin:import/errors",
+    "plugin:import/warnings",
+    "plugin:import/typescript",
+    "google",
+    "plugin:@typescript-eslint/recommended",
+  ],
     parser: "@typescript-eslint/parser",
     parserOptions: {
-      project: "serverless/functions/tsconfig.json",
+    project: ["serverless/functions/tsconfig.json", "serverless/functions/tsconfig.dev.json"],
       sourceType: "module",
     },
     plugins: [
@@ -19,53 +24,7 @@ module.exports = {
       "import",
     ],
     rules: {
-      "@typescript-eslint/adjacent-overload-signatures": "error",
-      "@typescript-eslint/no-empty-function": "error",
-      "@typescript-eslint/no-empty-interface": "warn",
-      "@typescript-eslint/no-floating-promises": "error",
-      "@typescript-eslint/no-namespace": "error",
-      "@typescript-eslint/no-unnecessary-type-assertion": "error",
-      "@typescript-eslint/prefer-for-of": "warn",
-      "@typescript-eslint/triple-slash-reference": "error",
-      "@typescript-eslint/unified-signatures": "warn",
-      "comma-dangle": "warn",
-      "constructor-super": "error",
-      eqeqeq: ["warn", "always"],
-      "import/no-deprecated": "warn",
-      "import/no-extraneous-dependencies": "error",
-      "import/no-unassigned-import": "warn",
-      "no-cond-assign": "error",
-      "no-duplicate-case": "error",
-      "no-duplicate-imports": "error",
-      "no-empty": [
-        "error",
-        {
-          allowEmptyCatch: true,
-        },
-      ],
-      "no-invalid-this": "error",
-      "no-new-wrappers": "error",
-      "no-param-reassign": "error",
-      "no-redeclare": "error",
-      "no-sequences": "error",
-      "no-shadow": [
-        "error",
-        {
-          hoist: "all",
-        },
-      ],
-      "no-throw-literal": "error",
-      "no-unsafe-finally": "error",
-      "no-unused-labels": "error",
-      "no-var": "warn",
-      "no-void": "error",
-      "prefer-const": "warn",
-    },
-    settings: {
-      jsdoc: {
-        tagNamePreference: {
-          returns: "return",
-        },
-      },
+      "quotes": ["error", "double"],
+      "import/no-unresolved": 0,
     },
   };

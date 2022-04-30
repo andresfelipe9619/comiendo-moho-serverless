@@ -13,15 +13,23 @@ const client = new vision.ImageAnnotatorClient();
 //    || context.auth.token?.firebase?.email_verified === false
 // Also see: https://firebase.google.com/docs/auth/admin/custom-claims
 export const annotateImage = functions.https.onCall(async (data, context) => {
-    if (!context.auth) {
+    const { token } = context?.auth || {}
+    const isAnonymous = token?.firebase?.sign_in_provider === 'anonymous'
+    const isUnverified = token?.firebase?.email_verified === false
+    const isUnauthenticated = !context.auth || isAnonymous || isUnverified
+
+    if (isUnauthenticated) {
         throw new functions.https.HttpsError(
             "unauthenticated",
             "annotateImage must be called while authenticated."
         );
     }
     try {
-        return await client.annotateImage(JSON.parse(data));
-    } catch (e) {
+        const [result] = await client.textDetection(JSON.parse(data));
+        const detections = result.textAnnotations;
+        console.log('Text:');
+        detections.forEach((text: any) => console.log(text));
+    } catch (e: any) {
         throw new functions.https.HttpsError("internal", e.message, e.details);
     }
 });
