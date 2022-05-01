@@ -15,6 +15,7 @@
     "firebase-functions": "^3.20.1",
     "@google-cloud/vision": "^2.1.2"
   },
+  "engines": {"node": "16"},
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^5.12.0",
     "@typescript-eslint/parser": "^5.12.0",

@@ -4,9 +4,11 @@ module.exports = {
     es6: true,
     node: true,
   },
-  ignorePatterns: [".eslintrc.js",     "/lib/**/*", // Ignore built files.
-],
-  extends: [ 
+  ignorePatterns: [
+    ".eslintrc.js", 
+    "/lib/**/*", // Ignore built files  .
+  ],
+  extends: [
     "eslint:recommended",
     "plugin:import/errors",
     "plugin:import/warnings",
@@ -14,17 +16,17 @@ module.exports = {
     "google",
     "plugin:@typescript-eslint/recommended",
   ],
-    parser: "@typescript-eslint/parser",
-    parserOptions: {
-    project: ["serverless/functions/tsconfig.json", "serverless/functions/tsconfig.dev.json"],
-      sourceType: "module",
-    },
-    plugins: [
-      "@typescript-eslint",
-      "import",
-    ],
-    rules: {
-      "quotes": ["error", "double"],
-      "import/no-unresolved": 0,
-    },
-  };
+  parser: "@typescript-eslint/parser",
+  parserOptions: {
+    project: ["tsconfig.json", "tsconfig.dev.json"],
+    sourceType: "module",
+  },
+  plugins: [
+    "@typescript-eslint",
+    "import",
+  ],
+  rules: {
+    "quotes": ["error", "double"],
+    "import/no-unresolved": 0,
+  },
+};
