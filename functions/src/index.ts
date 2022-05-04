@@ -1,28 +1,33 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import * as functions from "firebase-functions";
 import vision from "@google-cloud/vision";
+import axios from "axios";
+
+const SEARCH_ENGINE_ID = "e45f62f7fd8484b6f";
+const API_KEY = "AIzaSyCdInoUIs0BWbv5xoIirS4vs4rlSU2x2g8";
+const URL = "https://www.googleapis.com/customsearch/v1";
 
 const client = new vision.ImageAnnotatorClient();
 
-// This will allow only requests with an auth token to access the Vision
-// API, including anonymous ones.
-// It is highly recommended to limit access only to signed-in users. This may
-// be done by adding the following condition to the if statement:
-//    || context.auth.token?.firebase?.sign_in_provider === 'anonymous'
-//
-// For more fine-grained control, you may add additional failure checks, ie:
-//    || context.auth.token?.firebase?.email_verified === false
-// Also see: https://firebase.google.com/docs/auth/admin/custom-claims
-export const annotateImage = functions.https.onCall(async (data, context) => {
-  const {token} = context?.auth || {};
-  const isAnonymous = token?.firebase?.sign_in_provider === "anonymous";
-  const isUnverified = token?.firebase?.email_verified === false;
+/**
+ * @date 2022-05-04
+ * @param {any} context:functions.https.CallableContext
+ * @return {any}
+ */
+function isUnauthenticatedUser(context: functions.https.CallableContext): any {
+  const { firebase } = context?.auth?.token || {};
+  const isAnonymous = firebase?.sign_in_provider === "anonymous";
+  const isUnverified = firebase?.email_verified === false;
   const isUnauthenticated = !context.auth || isAnonymous || isUnverified;
+  return isUnauthenticated;
+}
 
+export const textDetection = functions.https.onCall(async (data, context) => {
+  const isUnauthenticated = isUnauthenticatedUser(context);
   if (isUnauthenticated) {
     throw new functions.https.HttpsError(
-        "unauthenticated",
-        "annotateImage must be called while authenticated."
+      "unauthenticated",
+      "textDetection must be called while authenticated."
     );
   }
   try {
@@ -30,7 +35,43 @@ export const annotateImage = functions.https.onCall(async (data, context) => {
     const detections = result.textAnnotations || [];
     console.log("Text:");
     detections.forEach((text: any) => console.log(text));
-  } catch (e:any) {
+  } catch (e: any) {
     throw new functions.https.HttpsError("internal", e.message, e.details);
   }
 });
+
+export const universalProductCodeSearch = functions.https.onCall(
+  async (data, context) => {
+    const isUnauthenticated = isUnauthenticatedUser(context);
+    if (isUnauthenticated) {
+      throw new functions.https.HttpsError(
+        "unauthenticated",
+        "searchUPC must be called while authenticated."
+      );
+    }
+    try {
+      console.log("data", data);
+      const result = await callGoogleSearch(`UPC%20${data}`);
+      console.log("result", result);
+    } catch (e: any) {
+      throw new functions.https.HttpsError("internal", e.message, e.details);
+    }
+  }
+);
+
+/**
+ * @date 2022-05-04
+ * @param {string} query
+ * @return {Promise<any>}
+ */
+async function callGoogleSearch(query: string): Promise<any> {
+  try {
+    const response = await axios.get(
+      `${URL}?key=${API_KEY}&cx=${SEARCH_ENGINE_ID}&q=${query}`
+    );
+    console.log(response.data);
+    return response.data;
+  } catch (error) {
+    console.error(error);
+  }
+}
