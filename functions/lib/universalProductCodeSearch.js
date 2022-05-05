@@ -26,6 +26,7 @@ const universalProductCodeSearch = functions.https.onCall(async (data, context) 
         console.log("data", data);
         const result = await callGoogleSearch(`UPC%20${data}`);
         console.log("result", result);
+        return result;
     }
     catch (e) {
         console.error(e);
