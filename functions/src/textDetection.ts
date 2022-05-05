@@ -19,6 +19,7 @@ const textDetection = functions.https.onCall(async (data, context) => {
     const detections = result.textAnnotations || [];
     console.log("Text:");
     detections.forEach((text: any) => console.log(text));
+    return result;
   } catch (e: any) {
     throw new functions.https.HttpsError("internal", e.message, e.details);
   }

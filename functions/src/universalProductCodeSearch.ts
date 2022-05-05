@@ -33,6 +33,7 @@ const universalProductCodeSearch = functions.https.onCall(
       console.log("data", data);
       const result = await callGoogleSearch(`UPC%20${data}`);
       console.log("result", result);
+      return result;
     } catch (e: any) {
       console.error(e);
       throw new functions.https.HttpsError("internal", e.message, e.details);
