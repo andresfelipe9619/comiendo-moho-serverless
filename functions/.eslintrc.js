@@ -32,6 +32,8 @@ module.exports = {
     "prettier"
   ],
   rules: {
+    "new-cap": 0,
+    "require-jsdoc": 0,
     "quotes": ["error", "double"],
     "import/no-unresolved": 0,
     "prettier/prettier": "error",

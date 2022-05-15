@@ -8,6 +8,7 @@ const API_KEY = "AIzaSyCdInoUIs0BWbv5xoIirS4vs4rlSU2x2g8";
 const URL = "https://www.googleapis.com/customsearch/v1";
 
 /**
+ * @docs https://developers.google.com/custom-search/v1/using_rest#response_data
  * @date 2022-05-04
  * @param {string} query
  * @return {Promise<any>}
